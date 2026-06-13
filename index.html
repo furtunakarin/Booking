@@ -557,9 +557,32 @@
       ${comment ? `<div class="summary-row"><span>Побажання</span><span>${comment}</span></div>` : ''}
     `;
 
+    // Build Viber pre-filled message
+    const servicesStr = selectedServices.map(s => s.name).join(', ');
+    const extrasMsg = selectedExtras.length ? ', ' + selectedExtras.map(e => e.name).join(', ') : '';
+    const commentMsg = comment ? '\nПобажання: ' + comment : '';
+    const lengthLabel2 = document.querySelector('.length-btn.active')?.dataset.length || '1';
+
+    const msg = 'Привіт! Хочу записатись \ud83d\udc85\n' +
+      'Послуга: ' + servicesStr + extrasMsg + '\n' +
+      'Довжина: ' + lengthLabel2 + '\n' +
+      'Дата: ' + formatted + '\n' +
+      'Час: ' + selectedSlot + '\n' +
+      "Ім\'я: " + name + '\n' +
+      'Тел: ' + phone + commentMsg;
+
+    const viberUrl = 'viber://chat?number=%2B380935199119&text=' + encodeURIComponent(msg);
+
+    // Update Viber button href
+    const viberBtn = document.querySelector('.tg-btn');
+    if (viberBtn) viberBtn.href = viberUrl;
+
     document.getElementById('formCard').style.display = 'none';
     document.getElementById('successScreen').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Auto-open Viber
+    setTimeout(function() { window.location.href = viberUrl; }, 800);
   }
 </script>
 </body>
