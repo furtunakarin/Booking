@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Запис до Катерини • Нігті</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --black-soft: #141414;
+    --card: #1a1a1a;
+    --fuchsia: #e0259a;
+    --fuchsia-glow: rgba(224,37,154,0.18);
+    --emerald: #00b57a;
+    --emerald-soft: rgba(0,181,122,0.12);
+    --white: #f5f5f5;
+    --muted: #888;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px 60px;
+  }
+
+  .wrap { width: 100%; max-width: 480px; }
+
+  .header { text-align: center; margin-bottom: 40px; }
+
+  .logo-line {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin-bottom: 16px;
+  }
+
+  .gem { width: 8px; height: 8px; background: var(--fuchsia); transform: rotate(45deg); flex-shrink: 0; }
+  .gem.em { background: var(--emerald); }
+
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-weight: 400;
+    letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted);
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 8vw, 46px);
+    font-weight: 300; line-height: 1.1; letter-spacing: -0.01em;
+  }
+  h1 em { font-style: italic; color: var(--fuchsia); }
+
+  .subtitle { margin-top: 10px; font-size: 13px; color: var(--muted); letter-spacing: 0.04em; }
+
+  .divider { display: flex; align-items: center; gap: 12px; margin: 32px 0; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .divider span { font-size: 11px; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; }
+
+  .field { margin-bottom: 20px; }
+
+  label {
+    display: block; font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+  }
+
+  input, select, textarea {
+    width: 100%; background: var(--black-soft); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--white); font-family: 'Inter', sans-serif;
+    font-size: 14px; padding: 13px 16px; outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s; -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--fuchsia); box-shadow: 0 0 0 3px var(--fuchsia-glow);
+  }
+  select option { background: #1a1a1a; }
+  textarea { resize: none; height: 80px; }
+
+  /* Services */
+  .services { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+
+  .service-card {
+    background: var(--black-soft); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 12px; cursor: pointer;
+    transition: all 0.2s; position: relative; user-select: none;
+  }
+  .service-card input[type="checkbox"] { position: absolute; opacity: 0; pointer-events: none; }
+  .service-card:hover { border-color: rgba(224,37,154,0.4); }
+  .service-card.selected { border-color: var(--fuchsia); background: var(--fuchsia-glow); }
+
+  .service-icon { font-size: 20px; margin-bottom: 6px; display: block; }
+  .service-name { font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--white); line-height: 1.3; }
+  .service-price { font-size: 11px; color: var(--emerald); margin-top: 3px; }
+
+  .check-mark {
+    position: absolute; top: 8px; right: 8px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--fuchsia); display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s; font-size: 10px;
+  }
+  .service-card.selected .check-mark { opacity: 1; }
+
+  /* Extras */
+  .extras-label { font-size: 11px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .extras { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .extra-tag {
+    background: var(--black-soft); border: 1px solid var(--border);
+    border-radius: 20px; padding: 7px 14px; font-size: 12px;
+    cursor: pointer; transition: all 0.2s; user-select: none; color: var(--muted);
+  }
+  .extra-tag:hover { border-color: rgba(224,37,154,0.4); color: var(--white); }
+  .extra-tag.selected { border-color: var(--fuchsia); color: var(--fuchsia); background: var(--fuchsia-glow); }
+  .extra-note { font-size: 11px; color: var(--muted); margin-bottom: 16px; }
+
+  /* Length selector */
+  .length-row { display: flex; gap: 8px; margin-bottom: 20px; }
+  .length-btn {
+    flex: 1; background: var(--black-soft); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 4px; text-align: center;
+    font-size: 12px; cursor: pointer; transition: all 0.2s; color: var(--muted);
+  }
+  .length-btn:hover { border-color: rgba(224,37,154,0.4); color: var(--white); }
+  .length-btn.active { border-color: var(--fuchsia); color: var(--fuchsia); background: var(--fuchsia-glow); }
+  .length-price { font-size: 10px; margin-top: 3px; color: var(--emerald); }
+
+  /* Slots */
+  .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+  .slot {
+    background: var(--black-soft); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 6px; text-align: center;
+    font-size: 13px; cursor: pointer; transition: all 0.2s; color: var(--white);
+  }
+  .slot:hover { border-color: rgba(0,181,122,0.5); }
+  .slot.active { border-color: var(--emerald); background: var(--emerald-soft); color: var(--emerald); font-weight: 500; }
+  .slot.unavailable { opacity: 0.28; cursor: not-allowed; text-decoration: line-through; color: var(--muted); }
+  .slot.unavailable:hover { border-color: var(--border); }
+
+  /* Sunday notice */
+  .sunday-notice {
+    background: rgba(224,37,154,0.08); border: 1px solid rgba(224,37,154,0.2);
+    border-radius: 10px; padding: 14px 16px; text-align: center;
+    font-size: 13px; color: var(--muted); margin-bottom: 8px; display: none;
+  }
+  .sunday-notice strong { color: var(--fuchsia); }
+
+  /* Price preview */
+  .price-preview {
+    background: var(--black-soft); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 20px;
+    font-size: 12px; color: var(--muted);
+    display: none;
+  }
+  .price-preview .price-total { font-size: 16px; color: var(--white); font-weight: 500; margin-top: 4px; }
+  .price-preview .price-from { font-size: 10px; color: var(--muted); }
+
+  /* Submit */
+  .btn {
+    width: 100%; padding: 16px; background: var(--fuchsia); color: #fff;
+    border: none; border-radius: 12px; font-family: 'Inter', sans-serif;
+    font-size: 14px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; transition: opacity 0.2s, transform 0.15s; margin-top: 8px;
+  }
+  .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  /* Errors */
+  .error-msg { font-size: 11px; color: #ff5c5c; margin-top: 5px; display: none; }
+  .field.has-error input, .field.has-error select { border-color: #ff5c5c; }
+  .field.has-error .error-msg { display: block; }
+
+  /* Success */
+  .success { display: none; text-align: center; padding: 48px 20px; }
+  .success-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--emerald-soft); border: 1px solid var(--emerald);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 20px;
+  }
+  .success h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; margin-bottom: 10px; }
+  .success p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+
+  .tg-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #229ED9; color: #fff; text-decoration: none;
+    padding: 14px 24px; border-radius: 12px; font-size: 14px; font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .tg-btn:hover { opacity: 0.88; }
+
+  .summary-box { background: var(--black-soft); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 20px; text-align: left; }
+  .summary-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: var(--muted); }
+  .summary-row span:last-child { color: var(--white); }
+
+  .footer-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 20px; letter-spacing: 0.03em; }
+  .footer-note a { color: var(--fuchsia); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="logo-line">
+      <div class="gem"></div>
+      <span class="brand">furtuna.katrin.nails</span>
+      <div class="gem em"></div>
+    </div>
+    <h1>Запис на<br><em>манікюр</em></h1>
+    <p class="subtitle">Миколаїв • 20 років досвіду</p>
+  </div>
+
+  <div class="card" id="formCard">
+
+    <!-- Services -->
+    <label style="margin-bottom:12px; display:block;">Оберіть послугу</label>
+    <div class="services" id="servicesGrid">
+      <div class="service-card" data-service="Манікюр" data-base="300" onclick="toggleService(this)">
+        <input type="checkbox">
+        <span class="service-icon">💅</span>
+        <div class="service-name">Манікюр</div>
+        <div class="service-price">від 300 грн</div>
+        <div class="check-mark">✓</div>
+      </div>
+      <div class="service-card" data-service="Нарощування нігтів" data-base="750" onclick="toggleService(this)">
+        <input type="checkbox">
+        <span class="service-icon">✨</span>
+        <div class="service-name">Нарощування нігтів</div>
+        <div class="service-price">від 750 грн</div>
+        <div class="check-mark">✓</div>
+      </div>
+      <div class="service-card" data-service="Корекція" data-base="550" onclick="toggleService(this)">
+        <input type="checkbox">
+        <span class="service-icon">🔧</span>
+        <div class="service-name">Корекція</div>
+        <div class="service-price">від 550 грн</div>
+        <div class="check-mark">✓</div>
+      </div>
+      <div class="service-card" data-service="Укріплення нігтів" data-base="500" onclick="toggleService(this)">
+        <input type="checkbox">
+        <span class="service-icon">💎</span>
+        <div class="service-name">Укріплення нігтів</div>
+        <div class="service-price">від 500 грн</div>
+        <div class="check-mark">✓</div>
+      </div>
+    </div>
+    <div style="margin-top:-10px; margin-bottom:14px;">
+      <div class="error-msg" id="serviceErrMsg">Оберіть хоча б одну послугу</div>
+    </div>
+
+    <!-- Length -->
+    <label>Довжина нігтів</label>
+    <div class="length-row" id="lengthRow">
+      <div class="length-btn active" data-length="1" data-add="0" onclick="selectLength(this)">
+        Довжина 1<div class="length-price">базова</div>
+      </div>
+      <div class="length-btn" data-length="2" data-add="50" onclick="selectLength(this)">
+        Довжина 2<div class="length-price">+50 грн</div>
+      </div>
+      <div class="length-btn" data-length="3" data-add="100" onclick="selectLength(this)">
+        Довжина 3<div class="length-price">+100 грн</div>
+      </div>
+      <div class="length-btn" data-length="4" data-add="150" onclick="selectLength(this)">
+        Довжина 4<div class="length-price">+150 грн</div>
+      </div>
+    </div>
+
+    <!-- Extras -->
+    <span class="extras-label">Додатково</span>
+    <div class="extras" id="extrasGrid">
+      <div class="extra-tag" data-extra="Френч" data-add="50" onclick="toggleExtra(this)">Френч +50</div>
+      <div class="extra-tag" data-extra="Кошаче око" data-add="50" onclick="toggleExtra(this)">Кошаче око +50</div>
+      <div class="extra-tag" data-extra="Втірка" data-add="50" onclick="toggleExtra(this)">Втірка +50</div>
+      <div class="extra-tag" data-extra="Дизайн" data-add="30" onclick="toggleExtra(this)">Дизайн від +30</div>
+    </div>
+
+    <!-- Price preview -->
+    <div class="price-preview" id="pricePreview">
+      Орієнтовна вартість:
+      <div class="price-total" id="priceTotal">— грн</div>
+      <div class="price-from">Точна ціна — після огляду нігтів</div>
+    </div>
+
+    <div class="divider"><span>Дата та час</span></div>
+
+    <!-- Date -->
+    <div class="field" id="dateField">
+      <label>Бажана дата</label>
+      <input type="date" id="dateInput" min="" onchange="onDateChange()">
+    </div>
+
+    <!-- Sunday notice -->
+    <div class="sunday-notice" id="sundayNotice">
+      <strong>Неділя — вихідний день 🌸</strong><br>
+      Будь ласка, оберіть інший день
+    </div>
+
+    <!-- Time slots -->
+    <div class="field" id="slotsField">
+      <label>Час прийому</label>
+      <div class="slots" id="slotsGrid">
+        <div class="slot unavailable" data-time="10:00">10:00</div>
+        <div class="slot" data-time="11:00" onclick="selectSlot(this)">11:00</div>
+        <div class="slot unavailable" data-time="12:00">12:00</div>
+        <div class="slot unavailable" data-time="13:00">13:00</div>
+        <div class="slot unavailable" data-time="14:00">14:00</div>
+        <div class="slot unavailable" data-time="15:00">15:00</div>
+        <div class="slot unavailable" data-time="16:00">16:00</div>
+        <div class="slot" data-time="17:00" onclick="selectSlot(this)">17:00</div>
+        <div class="slot unavailable" data-time="18:00">18:00</div>
+      </div>
+      <div class="error-msg" id="slotErr">Оберіть час</div>
+    </div>
+
+    <div class="divider"><span>Контакти</span></div>
+
+    <div class="field" id="nameField">
+      <label>Ваше ім'я</label>
+      <input type="text" id="nameInput" placeholder="Ольга">
+      <div class="error-msg">Введіть ваше ім'я</div>
+    </div>
+
+    <div class="field" id="phoneField">
+      <label>Номер телефону</label>
+      <input type="tel" id="phoneInput" placeholder="+380 XX XXX XX XX">
+      <div class="error-msg">Введіть номер телефону</div>
+    </div>
+
+    <div class="field">
+      <label>Побажання (необов'язково)</label>
+      <textarea id="commentInput" placeholder="Наприклад: хочу французький манікюр, є алергія на..."></textarea>
+    </div>
+
+    <button class="btn" onclick="submitForm()">Надіслати заявку →</button>
+
+    <p class="footer-note">
+      Після відправки я зв'яжусь з вами у
+      <a href="viber://chat?number=%2B380935199119">Viber</a>
+      для підтвердження запису
+    </p>
+  </div>
+
+  <!-- Success -->
+  <div class="success" id="successScreen">
+    <div class="success-icon">💅</div>
+    <h2>Заявку отримано!</h2>
+    <p>Катерина зв'яжеться з вами<br>для підтвердження запису.</p>
+    <div class="summary-box" id="summaryBox"></div>
+    <a href="viber://chat?number=%2B380935199119" class="tg-btn" style="background:#7360F2;" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M11.993 0C5.37 0 0 5.373 0 12c0 2.607.838 5.022 2.261 6.985L.783 23.18l4.329-1.383A11.938 11.938 0 0 0 11.993 24C18.617 24 24 18.627 24 12S18.617 0 11.993 0zm.007 4.338c1.168 0 3.674.095 5.422 1.735 1.465 1.373 1.98 3.266 1.98 5.396 0 4.418-2.576 6.823-7.402 6.823a7.97 7.97 0 0 1-1.808-.206l-2.17.694.563-2.026A7.332 7.332 0 0 1 7 11.5c0-4.056 2.8-7.162 7-7.162zm.27 1.748c-3.09 0-5.27 2.24-5.27 5.414 0 1.19.36 2.27.98 3.14l-.36 1.29 1.35-.43a5.3 5.3 0 0 0 3.3 1.14c3.08 0 5.27-2.19 5.27-5.37 0-3.23-2.19-5.18-5.27-5.18zm2.66 7.42c-.13.36-.75.68-1.04.72-.27.04-.62.06-.99-.06-.23-.07-.52-.17-.89-.33-1.56-.67-2.58-2.23-2.66-2.34-.08-.1-.63-.84-.63-1.6 0-.76.4-1.14.54-1.29.14-.16.31-.2.41-.2h.29c.09 0 .22-.04.34.26l.49 1.19c.04.1.07.21.01.33-.06.12-.09.19-.18.29l-.27.31c-.09.1-.18.2-.08.4.1.2.46.76.99 1.23.68.6 1.25.79 1.43.88.18.09.28.07.38-.04l.55-.65c.1-.12.2-.1.34-.06l1.07.5c.25.12.42.18.48.28.06.1.06.58-.12.94z"/></svg>
+      Написати у Viber
+    </a>
+  </div>
+
+</div>
+
+<script>
+  // ── Blocked dates (YYYY-MM-DD → array of blocked times, or 'all') ──
+  const BLOCKED = {
+    '2025-06-20': ['11:00'],   // субота 20.06 — 11:00 зайнято
+    '2025-07-18': ['11:00'],   // 18.07 — 11:00 зайнято
+  };
+
+  // Base available slots (excluding Sunday logic)
+  const BASE_SLOTS = ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
+  // Only 11:00 and 17:00 are open by default
+  const OPEN_SLOTS = ['11:00', '17:00'];
+
+  let selectedServices = [];
+  let selectedSlot = null;
+  let selectedLength = 0;   // extra cost from length
+  let selectedExtras = [];  // {name, add}
+
+  // Init date
+  const today = new Date().toISOString().split('T')[0];
+  const dateInput = document.getElementById('dateInput');
+  dateInput.min = today;
+  dateInput.value = today;
+  onDateChange();
+
+  // ── Service toggle ──
+  function toggleService(card) {
+    card.classList.toggle('selected');
+    const svc = card.dataset.service;
+    const base = parseInt(card.dataset.base);
+    if (card.classList.contains('selected')) {
+      if (!selectedServices.find(s => s.name === svc))
+        selectedServices.push({ name: svc, base });
+    } else {
+      selectedServices = selectedServices.filter(s => s.name !== svc);
+    }
+    document.getElementById('serviceErrMsg').style.display = 'none';
+    updatePrice();
+  }
+
+  // ── Length ──
+  function selectLength(btn) {
+    document.querySelectorAll('.length-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedLength = parseInt(btn.dataset.add);
+    updatePrice();
+  }
+
+  // ── Extras ──
+  function toggleExtra(tag) {
+    tag.classList.toggle('selected');
+    const extra = tag.dataset.extra;
+    const add = parseInt(tag.dataset.add);
+    if (tag.classList.contains('selected')) {
+      if (!selectedExtras.find(e => e.name === extra))
+        selectedExtras.push({ name: extra, add });
+    } else {
+      selectedExtras = selectedExtras.filter(e => e.name !== extra);
+    }
+    updatePrice();
+  }
+
+  // ── Price preview ──
+  function updatePrice() {
+    const preview = document.getElementById('pricePreview');
+    if (selectedServices.length === 0) {
+      preview.style.display = 'none';
+      return;
+    }
+    const baseMin = Math.min(...selectedServices.map(s => s.base));
+    const extrasTotal = selectedExtras.reduce((sum, e) => sum + e.add, 0);
+    const total = baseMin + selectedLength + extrasTotal;
+    document.getElementById('priceTotal').textContent = 'від ' + total + ' грн';
+    preview.style.display = 'block';
+  }
+
+  // ── Date change ──
+  function onDateChange() {
+    const val = dateInput.value;
+    if (!val) return;
+
+    // Parse date correctly (avoid UTC shift)
+    const [y, m, d] = val.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    const dow = date.getDay(); // 0=Sun
+
+    const sundayNotice = document.getElementById('sundayNotice');
+    const slotsField = document.getElementById('slotsField');
+
+    if (dow === 0) {
+      // Sunday — hide slots, show notice
+      sundayNotice.style.display = 'block';
+      slotsField.style.display = 'none';
+      selectedSlot = null;
+      return;
+    }
+
+    sundayNotice.style.display = 'none';
+    slotsField.style.display = 'block';
+
+    // Rebuild slots
+    const grid = document.getElementById('slotsGrid');
+    grid.innerHTML = '';
+    selectedSlot = null;
+
+    const blockedTimes = BLOCKED[val] || [];
+
+    BASE_SLOTS.forEach(time => {
+      const div = document.createElement('div');
+      div.dataset.time = time;
+      div.textContent = time;
+
+      const isOpen = OPEN_SLOTS.includes(time);
+      const isBlocked = blockedTimes.includes(time);
+
+      if (!isOpen || isBlocked) {
+        div.className = 'slot unavailable';
+      } else {
+        div.className = 'slot';
+        div.onclick = function() { selectSlot(this); };
+      }
+      grid.appendChild(div);
+    });
+  }
+
+  // ── Slot select ──
+  function selectSlot(el) {
+    if (el.classList.contains('unavailable')) return;
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    selectedSlot = el.dataset.time;
+    document.getElementById('slotErr').style.display = 'none';
+  }
+
+  // ── Validate ──
+  function validate() {
+    let ok = true;
+
+    if (selectedServices.length === 0) {
+      document.getElementById('serviceErrMsg').style.display = 'block';
+      ok = false;
+    }
+
+    const val = dateInput.value;
+    if (val) {
+      const [y, m, d] = val.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      if (date.getDay() === 0) {
+        ok = false; // Sunday blocked
+      }
+    }
+
+    if (!selectedSlot) {
+      document.getElementById('slotErr').style.display = 'block';
+      ok = false;
+    }
+
+    const name = document.getElementById('nameInput').value.trim();
+    const nameField = document.getElementById('nameField');
+    if (!name) { nameField.classList.add('has-error'); ok = false; }
+    else nameField.classList.remove('has-error');
+
+    const phone = document.getElementById('phoneInput').value.trim();
+    const phoneField = document.getElementById('phoneField');
+    if (!phone || phone.length < 10) { phoneField.classList.add('has-error'); ok = false; }
+    else phoneField.classList.remove('has-error');
+
+    return ok;
+  }
+
+  // ── Submit ──
+  function submitForm() {
+    if (!validate()) return;
+
+    const name = document.getElementById('nameInput').value.trim();
+    const phone = document.getElementById('phoneInput').value.trim();
+    const dateVal = dateInput.value;
+    const comment = document.getElementById('commentInput').value.trim();
+
+    const [y, m, d] = dateVal.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    const formatted = date.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    const extrasStr = selectedExtras.map(e => e.name).join(', ') || '—';
+    const lengthLabel = document.querySelector('.length-btn.active')?.dataset.length || '1';
+
+    const summary = document.getElementById('summaryBox');
+    summary.innerHTML = `
+      <div class="summary-row"><span>Ім'я</span><span>${name}</span></div>
+      <div class="summary-row"><span>Телефон</span><span>${phone}</span></div>
+      <div class="summary-row"><span>Послуга</span><span>${selectedServices.map(s=>s.name).join(', ')}</span></div>
+      <div class="summary-row"><span>Довжина</span><span>${lengthLabel}</span></div>
+      <div class="summary-row"><span>Додатково</span><span>${extrasStr}</span></div>
+      <div class="summary-row"><span>Дата</span><span>${formatted}</span></div>
+      <div class="summary-row"><span>Час</span><span>${selectedSlot}</span></div>
+      ${comment ? `<div class="summary-row"><span>Побажання</span><span>${comment}</span></div>` : ''}
+    `;
+
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
